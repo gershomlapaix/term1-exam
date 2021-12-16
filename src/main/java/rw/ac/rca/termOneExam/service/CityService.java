@@ -17,13 +17,25 @@ public class CityService {
 	private ICityRepository cityRepository;
 	
 	public Optional<City> getById(long id) {
-		
-		return cityRepository.findById(id);
+		Optional<City> city = cityRepository.findById(id);
+		if(city.isPresent()) {
+			City eachFoundCity = city.get();
+			eachFoundCity.setFahrenheit((eachFoundCity.getWeather()*9/5)+32);
+
+			return Optional.of(eachFoundCity);
+		}
+		return null;
 	}
 
 	public List<City> getAll() {
-		
-		return cityRepository.findAll();
+
+//		calculating fahrenheit value for every city
+		List<City> cities = cityRepository.findAll();
+		for(City city:cities){
+			city.setFahrenheit((city.getWeather()*9/5)+32);
+		}
+
+		return cities;
 	}
 
 	public boolean existsByName(String name) {

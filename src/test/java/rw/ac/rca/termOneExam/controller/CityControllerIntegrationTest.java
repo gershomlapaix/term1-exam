@@ -107,7 +107,7 @@ public class CityControllerIntegrationTest {
 
         when(cityService.save(createCityDTO)).thenReturn(city);
         ResponseEntity<City> createResponse = restTemplate.postForEntity(getRootUrl()+"/api/cities/add",city,City.class);
-        assertThrows()
+//        assertThrows()
     }
 
 }
