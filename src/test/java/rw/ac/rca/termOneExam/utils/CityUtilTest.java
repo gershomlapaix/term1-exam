@@ -9,11 +9,12 @@ import rw.ac.rca.termOneExam.domain.City;
 import rw.ac.rca.termOneExam.repository.ICityRepository;
 import rw.ac.rca.termOneExam.service.CityService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CityUtilTest {
@@ -79,4 +80,38 @@ public class CityUtilTest {
 
         assertTrue(String.valueOf(true), city2.getName().contains("Kigali"));
     }
+
+    @Test
+    public void testMocking() {
+        ArrayList<City> arrayListMock =  mock(ArrayList.class);
+        System.out.println(arrayListMock.get(0));//null
+        System.out.println(arrayListMock.size());//0
+
+        arrayListMock.add(new City("Paris",15));
+        arrayListMock.add(new City("Dortmund", 12));
+        System.out.println(arrayListMock.size());//0
+
+        when(arrayListMock.size()).thenReturn(5);
+        System.out.println(arrayListMock.size());//5
+    }
+
+    @Test
+    public void testSpying() {
+        ArrayList<City> arrayListSpy =  spy(ArrayList.class);
+        arrayListSpy.add(new City("Kayonza",21));
+        System.out.println(arrayListSpy.get(0));//Test0
+        System.out.println(arrayListSpy.size());//1
+
+        arrayListSpy.add(new City("Rwamagana",27));
+        arrayListSpy.add(new City("Bugesera",28));
+        System.out.println(arrayListSpy.size());
+
+        when(arrayListSpy.size()).thenReturn(5);
+        System.out.println(arrayListSpy.size());//5
+
+        arrayListSpy.add(new City("Gatsibo",32));
+        System.out.println(arrayListSpy.size());//5
+    }
+
+
 }
