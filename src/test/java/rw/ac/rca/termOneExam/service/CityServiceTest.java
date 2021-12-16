@@ -45,6 +45,8 @@ public class CityServiceTest {
         assertEquals("Gitarama",cityService.getAll().get(0).getName());
     }
 
+
+
     @Test
     public void post_Success() {
         CreateCityDTO createCityDTO = new CreateCityDTO("Kabarondo",18);
@@ -75,6 +77,38 @@ public class CityServiceTest {
 
     }
 
-    
+
+    @Test
+    public void testOneCitySuccess() throws Exception {
+        City city = new City(101, "Kigali", 25, 60);
+
+        when(cityService.getById(city.getId())).thenReturn(Optional.of(city));
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get("/api/cities/id/101")
+                .accept(MediaType.APPLICATION_JSON);
+
+        MvcResult mvcResult =
+                mockMvc.perform(request)
+                        .andExpect(status().isOk())
+                        .andReturn();
+    }
+
+    @Test
+    public void testOneCity_404() throws Exception {
+        City city = new City(101, "Kigali", 25, 60);
+
+        when(cityService.getById(city.getId())).thenReturn(Optional.of(city));
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get("/api/cities/id/108")
+                .accept(MediaType.APPLICATION_JSON);
+
+        MvcResult mvcResult =
+                mockMvc.perform(request)
+                        .andExpect(status().isNotFound())
+                        .andReturn();
+    }
+
 
 }

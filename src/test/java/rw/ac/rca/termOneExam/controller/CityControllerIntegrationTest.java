@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import rw.ac.rca.termOneExam.domain.City;
 import rw.ac.rca.termOneExam.dto.CreateCityDTO;
 import rw.ac.rca.termOneExam.service.CityService;
+import rw.ac.rca.termOneExam.utils.APICustomResponse;
 
 import java.util.Optional;
 
@@ -68,21 +69,15 @@ public class CityControllerIntegrationTest {
     }
 
     @Test
-    public void testGetByIdFail() throws Exception{
-        City city = new City("Nyagatare",22.3);
+    public void getById_404() {
+        ResponseEntity<APICustomResponse> city =
+                this.restTemplate.getForEntity("/api/cities/id/110", APICustomResponse.class);
+        City city1 = new City(110,"Kg",20,50);
 
-        when(cityService.getById(city.getId())).thenReturn(Optional.of(city));
-
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get("/api/cities/id/110")
-                .accept(MediaType.APPLICATION_JSON);
-
-        MvcResult mvcResult =
-                mockMvc.perform(request)
-                        .andExpect(status().isNotFound())
-                        .andReturn();
+        assertTrue(city.getStatusCodeValue()==404);
+        assertFalse(city.getBody().isStatus());
+        assertEquals("City not found with id " + city1.getId(), city.getBody().getMessage());
     }
-
 
     @Test
     public void createTestSuccess(){
@@ -107,7 +102,7 @@ public class CityControllerIntegrationTest {
 
         when(cityService.save(createCityDTO)).thenReturn(city);
         ResponseEntity<City> createResponse = restTemplate.postForEntity(getRootUrl()+"/api/cities/add",city,City.class);
-//        assertThrows()
+        assertEquals("City name " + createCityDTO.getName() + " is registered already",createResponse.getBody().getMessage());
     }
 
 }
